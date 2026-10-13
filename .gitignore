@@ -1,0 +1,37 @@
+# Snakemake internal files
+.snakemake/
+
+# Generated RNA-seq results
+aligned/
+counts/
+fastqc_results/
+fastqc_trimmed/
+trimmed/
+star_index/
+
+# Raw sequencing data
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+
+# Alignment files
+*.bam
+*.bai
+*.sam
+
+# Large reference files
+*.fa
+*.fasta
+*.gtf
+*.gff
+*.fai
+
+# Python temporary files
+__pycache__/
+*.pyc
+
+# Git practice files
+hello.txt
+message.txt
+result.txt
