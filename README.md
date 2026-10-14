@@ -27,3 +27,9 @@ using a small practice dataset.
 
 Future development will include analysis of real biological samples
 and differential gene expression analysis.
+
+## Future Improvements
+
+- Process real RNA-seq biological replicates
+- Add differential expression analysis using DESeq2
+- Generate PCA plots, heatmaps, and volcano plots
