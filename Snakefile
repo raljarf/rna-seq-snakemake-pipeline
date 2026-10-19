@@ -1,5 +1,5 @@
 SAMPLES = glob_wildcards(
-    "../../learning/real-fastq-practice/{sample}_1.fastq.gz"
+    "../../datasets/yeast-rnaseq/{sample}_1.fastq"
 ).sample
 
 READS = ["1", "2"]
@@ -59,10 +59,20 @@ rule all:
         # Final combined gene count matrix
         "counts/gene_count_matrix.tsv",
 
+        # DESeq2 differential expression results
+        "deseq2_results/differential_expression.tsv",
+
+        # PCA plot
+        "deseq2_results/PCA_plot.pdf",
+
+        # Volcano plot
+        "deseq2_results/volcano_plot.pdf",
+
+
 
 rule fastqc:
     input:
-        "../../learning/real-fastq-practice/{sample}_{read}.fastq.gz"
+        "../../datasets/yeast-rnaseq/{sample}_{read}.fastq"
     output:
         html="fastqc_results/{sample}_{read}_fastqc.html",
         zip="fastqc_results/{sample}_{read}_fastqc.zip"
@@ -74,8 +84,8 @@ rule fastqc:
 
 rule trim:
     input:
-        r1="../../learning/real-fastq-practice/{sample}_1.fastq.gz",
-        r2="../../learning/real-fastq-practice/{sample}_2.fastq.gz"
+        r1="../../datasets/yeast-rnaseq/{sample}_1.fastq",
+        r2="../../datasets/yeast-rnaseq/{sample}_2.fastq"
     output:
         r1="trimmed/{sample}_1.trimmed.fastq.gz",
         r2="trimmed/{sample}_2.trimmed.fastq.gz",
@@ -179,6 +189,7 @@ rule count_genes:
             -T 1 \
             -p \
             --countReadPairs \
+            -s 2 \
             -t exon \
             -g gene_id \
             -a {input.gtf} \
@@ -198,3 +209,20 @@ rule combine_counts:
         "envs/pandas.yaml"
     script:
         "scripts/combine_counts.py"
+
+# Differential gene expression analysis using DESeq2
+rule deseq2:
+    input:
+        counts="counts/gene_count_matrix.tsv",
+        samples="samples.tsv"
+    output:
+        results="deseq2_results/differential_expression.tsv",
+        pca="deseq2_results/PCA_plot.pdf",
+        volcano="deseq2_results/volcano_plot.pdf"
+    conda:
+        "envs/deseq2.yaml"
+    shell:
+        """
+        mkdir -p deseq2_results
+        Rscript scripts/deseq2_analysis.R
+        """
