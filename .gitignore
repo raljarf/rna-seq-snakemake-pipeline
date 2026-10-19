@@ -35,3 +35,9 @@ __pycache__/
 hello.txt
 message.txt
 result.txt
+
+# Temporary strandedness testing
+strandedness_test/
+
+# Generated DESeq2 results
+deseq2_results/
